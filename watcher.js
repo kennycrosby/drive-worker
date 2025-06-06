@@ -6,6 +6,11 @@ import util from 'util';
 import dotenv from 'dotenv';
 dotenv.config();
 
+console.log("GOOGLE_SERVICE_ACCOUNT:", process.env.GOOGLE_SERVICE_ACCOUNT?.slice(0, 100));
+if (!process.env.GOOGLE_SERVICE_ACCOUNT) {
+  throw new Error("GOOGLE_SERVICE_ACCOUNT environment variable is not set.");
+}
+
 const execFileAsync = util.promisify(execFile);
 
 const INPUT_FOLDER_ID = process.env.INPUT_FOLDER_ID;
