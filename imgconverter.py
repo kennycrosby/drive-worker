@@ -57,6 +57,7 @@ for stop_folder in os.listdir(input_root):
                 "-y",
                 video_output_path
             ]
+
             print(f"Creating video: {video_output_path}")
             subprocess.run(cmd, check=True)
         else:
