@@ -4,7 +4,7 @@
   "main": "watcher.js",
   "type": "module",
   "scripts": {
-    "start": "node watcher.js",
+    "start": "node server.js",
     "reset": "rm -rf ./tmp/input/* ./tmp/output/* processed.json"
   },
   "dependencies": {
