@@ -8,7 +8,6 @@ dotenv.config();
 
 const execFileAsync = util.promisify(execFile);
 
-const KEYFILE = 'service-account.json';
 const INPUT_FOLDER_ID = process.env.INPUT_FOLDER_ID;
 const OUTPUT_FOLDER_ID = process.env.OUTPUT_FOLDER_ID;
 
@@ -20,9 +19,11 @@ fs.mkdirSync(INPUT_DIR, { recursive: true });
 fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 
 const auth = new google.auth.GoogleAuth({
-  keyFile: KEYFILE,
+  credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT),
   scopes: ['https://www.googleapis.com/auth/drive'],
 });
+
+
 const drive = google.drive({ version: 'v3', auth });
 
 function loadProcessed() {
