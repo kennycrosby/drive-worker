@@ -1,0 +1,21 @@
+# Node
+node_modules/
+.env
+processed.json
+
+# Python cache
+__pycache__/
+
+# Temp folders
+tmp/
+output/
+input/
+
+# Mac system files
+.DS_Store
+
+# Logs
+*.log
+
+# Secrets
+service-account.json
