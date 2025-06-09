@@ -41,17 +41,31 @@ app.get('/run-watcher', (req, res) => {
   });
 });
 
-// 🔄 Reset processed.json
+// 🔄 Reset processed.json and tmp folders
 app.get('/reset-processed', async (req, res) => {
   try {
-    await writeFile(processedPath, JSON.stringify({ processed_files: [] }, null, 2), 'utf8');
-    console.log("🧹 processed.json has been reset.");
-    res.status(200).send("processed.json reset.");
+    // Clear processed.json
+    await fs.promises.writeFile(path.join(__dirname, 'processed.json'), JSON.stringify({ processed_files: [] }, null, 2));
+
+    // Remove ./tmp/input and ./tmp/output
+    const inputPath = path.join(__dirname, 'tmp', 'input');
+    const outputPath = path.join(__dirname, 'tmp', 'output');
+
+    await fs.promises.rm(inputPath, { recursive: true, force: true });
+    await fs.promises.rm(outputPath, { recursive: true, force: true });
+
+    // Recreate empty folders
+    await fs.promises.mkdir(inputPath, { recursive: true });
+    await fs.promises.mkdir(outputPath, { recursive: true });
+
+    console.log("🧹 Reset processed.json and cleared tmp folders.");
+    res.status(200).send("✅ Reset completed: processed.json, input/, and output/ cleared.");
   } catch (err) {
-    console.error("❌ Failed to reset processed.json:", err);
-    res.status(500).send("Failed to reset.");
+    console.error("❌ Reset failed:", err);
+    res.status(500).send("❌ Reset failed.");
   }
 });
+
 
 // 📄 Read processed.json
 app.get('/processed-status', async (req, res) => {
