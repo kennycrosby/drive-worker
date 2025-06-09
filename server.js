@@ -32,6 +32,21 @@ app.get('/run-watcher', (req, res) => {
   });
 });
 
+app.get('/reset-processed', (req, res) => {
+  const fs = require('fs');
+  const path = require('path');
+  const filePath = path.join(__dirname, 'processed.json');
+
+  try {
+    fs.writeFileSync(filePath, JSON.stringify({ processed_files: [] }, null, 2));
+    console.log("🧹 processed.json has been reset.");
+    res.status(200).send("processed.json reset.");
+  } catch (err) {
+    console.error("❌ Failed to reset processed.json:", err);
+    res.status(500).send("Failed to reset.");
+  }
+});
+
 app.listen(port, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${port}`);
 });
