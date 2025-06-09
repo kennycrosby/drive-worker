@@ -42,21 +42,23 @@ app.get('/run-watcher', (req, res) => {
 });
 
 // 🔄 Reset processed.json and tmp folders
+import { rm, mkdir } from 'fs/promises';
+
 app.get('/reset-processed', async (req, res) => {
   try {
     // Clear processed.json
-    await fs.promises.writeFile(path.join(__dirname, 'processed.json'), JSON.stringify({ processed_files: [] }, null, 2));
+    await writeFile(processedPath, JSON.stringify({ processed_files: [] }, null, 2));
 
     // Remove ./tmp/input and ./tmp/output
-    const inputPath = path.join(__dirname, 'tmp', 'input');
-    const outputPath = path.join(__dirname, 'tmp', 'output');
+    const inputPath = join(__dirname, 'tmp', 'input');
+    const outputPath = join(__dirname, 'tmp', 'output');
 
-    await fs.promises.rm(inputPath, { recursive: true, force: true });
-    await fs.promises.rm(outputPath, { recursive: true, force: true });
+    await rm(inputPath, { recursive: true, force: true });
+    await rm(outputPath, { recursive: true, force: true });
 
     // Recreate empty folders
-    await fs.promises.mkdir(inputPath, { recursive: true });
-    await fs.promises.mkdir(outputPath, { recursive: true });
+    await mkdir(inputPath, { recursive: true });
+    await mkdir(outputPath, { recursive: true });
 
     console.log("🧹 Reset processed.json and cleared tmp folders.");
     res.status(200).send("✅ Reset completed: processed.json, input/, and output/ cleared.");
@@ -65,6 +67,7 @@ app.get('/reset-processed', async (req, res) => {
     res.status(500).send("❌ Reset failed.");
   }
 });
+
 
 
 // 📄 Read processed.json

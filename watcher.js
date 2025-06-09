@@ -122,6 +122,7 @@ async function run() {
       const inputPath = path.join(INPUT_DIR, stopName, file.name);
       console.log(`Downloading ${stopName}/${file.name}...`);
       await downloadFile(file.id, inputPath);
+      console.log(`✅ Downloaded: ${file.name}`);
 
       console.log(`Running converter for ${stopName}/${file.name}...`);
       await execFileAsync('python3', ['imgconverter.py']);
