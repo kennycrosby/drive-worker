@@ -1,6 +1,6 @@
 import express from 'express';
 import { spawn } from 'child_process';
-import { readFile, writeFile } from 'fs/promises';
+import { rm, mkdir, readFile, writeFile } from 'fs/promises';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 
@@ -41,8 +41,7 @@ app.get('/run-watcher', (req, res) => {
   });
 });
 
-// 🔄 Reset processed.json and tmp folders
-import { rm, mkdir } from 'fs/promises';
+
 
 app.get('/reset-processed', async (req, res) => {
   try {

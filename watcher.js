@@ -6,6 +6,7 @@ import util from 'util';
 import dotenv from 'dotenv';
 dotenv.config();
 
+
 console.log("GOOGLE_SERVICE_ACCOUNT:", process.env.GOOGLE_SERVICE_ACCOUNT?.slice(0, 100));
 if (!process.env.GOOGLE_SERVICE_ACCOUNT) {
   throw new Error("GOOGLE_SERVICE_ACCOUNT environment variable is not set.");
@@ -124,8 +125,35 @@ async function run() {
       await downloadFile(file.id, inputPath);
       console.log(`✅ Downloaded: ${file.name}`);
 
+
+
       console.log(`Running converter for ${stopName}/${file.name}...`);
-      await execFileAsync('python3', ['imgconverter.py']);
+      await new Promise((resolve, reject) => {
+        const child = spawn('python3', ['imgconverter.py']);
+
+        child.stdout.on('data', (data) => {
+          console.log("📤 Python stdout:", data.toString().trim());
+        });
+
+        child.stderr.on('data', (data) => {
+          console.error("⚠️ Python stderr:", data.toString().trim());
+        });
+
+        child.on('error', (err) => {
+          console.error('❌ Python spawn error:', err);
+          reject(err);
+        });
+
+        child.on('close', (code) => {
+          if (code === 0) {
+            console.log("✅ Python script completed successfully.");
+            resolve(null);
+          } else {
+            reject(new Error(`imgconverter.py exited with code ${code}`));
+          }
+        });
+      });
+
 
       const baseName = path.parse(file.name).name;
       const videoName = `${stopName}_${baseName}.mp4`;
